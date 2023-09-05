@@ -1,0 +1,13 @@
+FROM python:3.11-slim
+RUN apt-get update
+RUN apt-get install -y curl python-dev-is-python3 gcc
+
+RUN useradd appuser
+
+WORKDIR /site
+
+COPY --chown=appuser src /site/app
+COPY --chown=appuser requirements.txt /site/app/requirements.txt
+
+RUN python -m pip install -r /site/app/requirements.txt
+USER appuser
