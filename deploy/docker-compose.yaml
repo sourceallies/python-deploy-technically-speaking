@@ -1,0 +1,27 @@
+version: "3.2"
+# make sure that docker is set to boot on startup: sudo systemctl enable docker
+services:
+  nginx:
+    build:
+      context: ..
+      dockerfile: ./deploy/Dockerfile.nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    restart: always # always restart even when the system does a reboot
+    volumes:
+      - ../static/public:/site/www/myserver/public
+      - ../deploy/ssl:/etc/ssl
+    depends_on:
+      - flask
+  flask:
+    build:
+      context: ..
+      dockerfile: ./deploy/Dockerfile.flask
+    expose:
+      - "3000"
+    restart: always # always restart even when the system does a reboot
+    volumes:
+      - ../config:/site/config
+      - ../static:/site/static
+    command: uwsgi --ini /site/config/behind_nginx.ini
