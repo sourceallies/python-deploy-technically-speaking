@@ -26,6 +26,8 @@ def index():
 """
 
 
+# FIXME: This is stored on the worker threads so it is not known by all requests.
+# We need to make this global to all threads. for example an actual sql database.
 books = {}
 
 
